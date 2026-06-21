@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M7d unterwegs · Wambach 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fdf8ef;
+    --bg2:#e9f5fb;
+    --panel:#ffffff;
+    --panel2:#fff6e6;
+    --line:#ecdcc6;
+    --line-soft:#f3e8d8;
+    --text:#3f2c1d;
+    --muted:#917c69;
+    --green:#2d8a5e;
+    --green-d:#1e6b47;
+    --amber:#e8943a;
+    --amber-d:#c27522;
+    --sky:#54c2e6;
+    --pink:#e8638a;
+    --rad:16px;
+    --rad-sm:10px;
+    --shadow:0 12px 32px rgba(100,80,40,.12);
+    --shadow-sm:0 4px 14px rgba(100,80,40,.08);
+    --ring:0 0 0 4px rgba(63,174,102,.16);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  ::selection{background:var(--amber);color:#fff}
+  body{
+    font-family:'Nunito',"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(900px 420px at 88% -8%,rgba(84,194,230,.10),transparent 60%),
+      radial-gradient(820px 460px at -6% 18%,rgba(63,174,102,.08),transparent 55%),
+      var(--bg);
+    background-attachment:fixed;
+    color:var(--text);
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  h1,h2.sect,.brand,.kicker,.cd-box .num,.day .head,.fact .v,.room .rt{font-family:'Sora',"Segoe UI",system-ui,sans-serif}
+  img{max-width:100%}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+  section{padding:clamp(64px,9vw,104px) 0;position:relative}
+  h2.sect{
+    font-size:clamp(28px,4.5vw,48px);
+    font-weight:700;letter-spacing:-1px;margin-bottom:10px;
+    display:flex;align-items:center;gap:14px;line-height:1.05;
+  }
+  h2.sect .ic{
+    font-size:.82em;display:inline-flex;align-items:center;
+  }
+  .sub{color:var(--muted);max-width:680px;margin-bottom:40px;font-size:1.06rem}
+  .tag-line{display:inline-flex;align-items:center;gap:8px;color:var(--amber-d);font-weight:700;letter-spacing:3px;
+    text-transform:uppercase;font-size:.72rem;margin-bottom:14px}
+  .tag-line::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--amber)}
+
+  /* NAV */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 22px;backdrop-filter:blur(14px) saturate(1.2);
+    background:rgba(255,255,255,.55);border-bottom:1px solid transparent;
+    transition:.3s ease;
+  }
+  nav.scrolled{background:rgba(255,253,248,.9);border-bottom-color:var(--line);box-shadow:0 8px 28px rgba(120,90,40,.12)}
+  .brand{font-weight:700;letter-spacing:.3px;display:flex;align-items:center;gap:10px;font-size:1.08rem}
+  .brand .dot{width:11px;height:11px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(242,160,43,.22),0 0 14px var(--amber)}
+  .navlinks{display:flex;gap:4px;flex-wrap:wrap}
+  .navlinks a{
+    text-decoration:none;color:var(--muted);font-size:.85rem;font-weight:700;
+    padding:7px 13px;border-radius:11px;transition:.2s;position:relative;
+  }
+  .navlinks a:hover{color:var(--green-d);background:rgba(63,174,102,.1)}
+  .menu-btn{display:none;background:#fff;border:1px solid var(--line);color:var(--text);
+    border-radius:12px;padding:8px 13px;font-size:1.1rem;cursor:pointer;box-shadow:var(--shadow-sm)}
+  @media(max-width:860px){
+    .navlinks{display:none;position:absolute;top:60px;right:14px;left:14px;flex-direction:column;
+      background:rgba(255,253,248,.98);border:1px solid var(--line);border-radius:14px;padding:10px}
+    .navlinks.open{display:flex}
+    .menu-btn{display:block}
+  }
+
+  /* HERO */
+  .hero{
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;position:relative;overflow:hidden;padding:130px 20px 150px;
+    background:linear-gradient(180deg,#aee2f7 0%,#c8ecdf 48%,#e8f5e6 75%,var(--bg) 100%);
+  }
+  .sun{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:200px;height:200px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,248,220,.9),rgba(255,220,130,.35) 40%,transparent 65%);
+    filter:blur(10px);animation:pulse 8s ease-in-out infinite}
+  .sun::after{content:"";position:absolute;inset:-40px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,214,90,.35),transparent 65%)}
+  @keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);opacity:.95}50%{transform:translateX(-50%) scale(1.07);opacity:1}}
+  .ridge{position:absolute;bottom:-1px;left:0;width:100%;z-index:1;line-height:0}
+  .ridge svg{display:block;width:100%;height:auto}
+  .hero-inner{position:relative;z-index:3;max-width:900px}
+  .hero .kicker{display:inline-block;color:var(--amber-d);font-weight:600;letter-spacing:4px;text-transform:uppercase;font-size:.76rem;
+    background:rgba(255,255,255,.45);padding:10px 22px;border-radius:8px;
+    backdrop-filter:blur(8px)}
+  .hero h1{
+    font-size:clamp(42px,9vw,96px);font-weight:700;line-height:.96;letter-spacing:-2.5px;margin:18px 0 10px;
+    text-shadow:0 2px 0 #fff,0 8px 22px rgba(120,90,40,.16);
+  }
+  .hero h1 .hl{color:var(--amber);position:relative;white-space:nowrap}
+  .hero h1 .hl::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.08em;height:.16em;border-radius:6px;
+    background:rgba(242,160,43,.28);z-index:-1}
+  .hero .where{font-size:clamp(16px,2.6vw,23px);color:var(--text);font-weight:700}
+  .hero .where b{color:var(--green-d)}
+  .cloud{position:absolute;background:rgba(255,255,255,.5);border-radius:60px;filter:blur(12px)}
+  .c1{width:200px;height:50px;top:22%;left:8%;animation:float 14s ease-in-out infinite}
+  .c2{width:280px;height:60px;top:34%;right:6%;animation:float 18s ease-in-out infinite reverse}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(18px)}}
+  .scroll-hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:4;color:var(--muted);
+    font-size:.8rem;letter-spacing:2px;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+  /* COUNTDOWN */
+  .countdown{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px;position:relative;z-index:3}
+  .cd-box{
+    background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.9);border-radius:18px;
+    padding:18px 22px;min-width:100px;backdrop-filter:blur(8px);box-shadow:var(--shadow-sm);
+  }
+  .cd-box .num{font-size:clamp(30px,6vw,48px);font-weight:700;color:var(--amber-d);line-height:1;
+    font-variant-numeric:tabular-nums}
+  .cd-box .lab{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:8px;font-weight:700}
+  .cd-go{font-size:1.4rem;font-weight:800;color:var(--green-d);margin-top:30px}
+
+  /* FACTS strip */
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:-48px}
+  .fact{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);padding:22px 16px;text-align:center;
+    box-shadow:var(--shadow-sm);transition:transform .25s,box-shadow .25s}
+  .fact:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .fact .ic{font-size:1.5rem;display:inline-grid;place-items:center;width:48px;height:48px;margin-bottom:4px;
+    border-radius:12px;background:rgba(255,248,240,.8)}
+  .fact .v{font-weight:800;font-size:1.08rem;margin-top:8px}
+  .fact .l{color:var(--muted);font-size:.82rem}
+
+  /* generic cards grid */
+  .grid{display:grid;gap:20px}
+  .g3{grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+  .g2{grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
+  .card{
+    background:#fff;
+    border:1px solid var(--line);border-radius:var(--rad);padding:22px;
+    box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+    transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;
+  }
+  .card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    background:var(--green);opacity:0;transition:opacity .28s}
+  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .card:hover::before{opacity:.7}
+  .card h3{font-size:1.14rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px;letter-spacing:-.2px}
+  .card p.desc{color:var(--muted);font-size:.93rem;margin-bottom:16px}
+  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto}
+  .pill{font-size:.73rem;font-weight:800;padding:5px 11px;border-radius:30px;border:1px solid transparent}
+  .pill.eff{color:var(--amber-d);background:#fff1d6}
+  .pill.cost{color:var(--green-d);background:#e2f5e9}
+  .pill.grp{color:#1c87b3;background:#dff3fb}
+  .cool{display:flex;align-items:center;gap:3px;margin-top:12px;font-size:.8rem;color:var(--muted)}
+  .flames{letter-spacing:1px}
+  .like{margin-top:12px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;border:1px solid var(--line);
+    background:#fff;color:var(--text);font-weight:800;font-size:.95rem;padding:7px 14px;border-radius:30px;transition:.2s;font-family:inherit}
+  .like:hover{border-color:#e8638a;background:#fff0f4}
+  .like.liked{background:#ffe3ec;border-color:#e8638a;color:#c23a63}
+  .like .lc{min-width:14px;text-align:center}
+  .card.pop{border-color:#f3a9c0;box-shadow:0 0 0 3px #ffe1ea,var(--shadow)}
+  .card.pop::before{opacity:1;background:linear-gradient(90deg,var(--pink),var(--amber))}
+  .pop-badge{display:none;margin-left:8px;font-size:.7rem;font-weight:800;color:#c23a63;background:#ffe3ec;padding:2px 9px;border-radius:20px;vertical-align:middle}
+  .card.pop .pop-badge{display:inline-block}
+  .heart-burst{position:fixed;pointer-events:none;font-size:22px;animation:burst 1s ease-out forwards;z-index:999}
+  @keyframes burst{0%{opacity:1;transform:translateY(0) scale(.6)}100%{opacity:0;transform:translateY(-70px) scale(1.4)}}
+
+  /* filter chips */
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:28px}
+  .chip{cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--muted);
+    padding:9px 17px;border-radius:30px;font-size:.85rem;font-weight:800;transition:.2s;box-shadow:var(--shadow-sm)}
+  .chip:hover{color:var(--green-d);border-color:var(--green);transform:translateY(-2px)}
+  .chip.active{background:linear-gradient(135deg,var(--green),var(--green-d));color:#fff;border-color:transparent;
+    box-shadow:0 8px 20px rgba(63,174,102,.32)}
+  /* activity category headers (grouped view) */
+  .actcat{grid-column:1/-1;display:flex;align-items:center;gap:12px;margin:18px 0 0;
+    font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.3rem;color:var(--green-d)}
+  .actcat:first-child{margin-top:0}
+  .actcat .ln{flex:1;height:2px;border-radius:2px;background:var(--line)}
+  .actcat .cnt{font-size:.74rem;font-weight:800;color:var(--muted);background:#fff;border:1px solid var(--line);
+    padding:3px 11px;border-radius:20px;letter-spacing:.5px}
+
+  /* meal plan */
+  .days{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+  .day{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);overflow:hidden;
+    box-shadow:var(--shadow-sm);transition:transform .25s,box-shadow .25s}
+  .day:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+  .day .head{background:linear-gradient(120deg,var(--green),var(--green-d));padding:16px 20px;font-weight:700;color:#fff;font-size:1.15rem}
+  .day .head small{display:block;color:rgba(255,255,255,.82);font-weight:600;font-size:.78rem;margin-top:2px}
+  .day .body{padding:18px 20px}
+  .meal{margin-bottom:16px;padding-bottom:14px;border-bottom:1px dashed var(--line-soft)}
+  .meal:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+  .meal h4{font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber-d);margin-bottom:6px;font-weight:800}
+  .meal ul{list-style:none;font-size:.94rem;color:var(--text)}
+  .meal li{padding:3px 0;color:var(--muted)}
+  .meal li.main{color:var(--text);font-weight:700}
+
+  /* shopping table */
+  .shop-block{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);
+    margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+  .shop-block summary{cursor:pointer;list-style:none;padding:18px 22px;font-weight:800;font-size:1.04rem;
+    display:flex;justify-content:space-between;align-items:center;background:var(--panel2);transition:.2s}
+  .shop-block summary:hover{background:#fff0d6}
+  .shop-block summary::-webkit-details-marker{display:none}
+  .shop-block summary .arr{transition:.25s;color:var(--green);font-size:.9rem}
+  .shop-block[open] summary .arr{transform:rotate(90deg)}
+  table{width:100%;border-collapse:collapse;font-size:.93rem}
+  th,td{text-align:left;padding:11px 22px;border-top:1px solid var(--line-soft)}
+  th{color:var(--muted);font-size:.72rem;letter-spacing:1px;text-transform:uppercase;font-weight:800}
+  td.qty{font-weight:800;color:var(--amber-d);white-space:nowrap}
+  td.chk{width:34px;text-align:center}
+  td.chk input{width:18px;height:18px;accent-color:var(--green);cursor:pointer}
+  tr.done td:not(.chk){text-decoration:line-through;color:var(--muted);opacity:.7}
+  tr.done td.qty{color:var(--muted)}
+  tbody tr{transition:background .15s}
+  tr:hover td{background:rgba(63,174,102,.05)}
+
+  /* packlist */
+  .pack{columns:2;column-gap:24px}
+  @media(max-width:600px){.pack{columns:1}}
+  .pack label{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);
+    border-radius:12px;background:var(--panel);margin-bottom:10px;cursor:pointer;break-inside:avoid;transition:.2s}
+  .pack label:hover{border-color:#2e6e4d}
+  .pack input{margin-top:4px;width:17px;height:17px;accent-color:var(--green)}
+  .pack input:checked + span{text-decoration:line-through;color:var(--muted)}
+  .must{color:var(--amber);font-weight:700;font-size:.74rem;margin-left:4px}
+
+  /* people */
+  .rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+  .room{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);padding:20px;
+    box-shadow:var(--shadow-sm);transition:transform .25s,box-shadow .25s}
+  .room:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .room .rt{font-weight:800;color:var(--green-d);display:flex;align-items:center;gap:8px;margin-bottom:12px;
+    padding-bottom:10px;border-bottom:2px solid var(--line-soft)}
+  .room ul{list-style:none}
+  .room li{padding:5px 0;border-bottom:1px dashed var(--line-soft);color:var(--muted)}
+  .room li:last-child{border:none}
+  .staff{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+  .person{background:var(--panel);border:1px solid var(--line);border-radius:40px;padding:8px 18px 8px 8px;
+    display:flex;align-items:center;gap:11px;font-weight:700;box-shadow:var(--shadow-sm)}
+  .person .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(140deg,var(--amber),var(--amber-d));
+    display:grid;place-items:center;font-weight:800;color:#fff;box-shadow:0 4px 10px rgba(221,122,20,.35)}
+
+  /* env */
+  .env{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:760px){.env{grid-template-columns:1fr}}
+  .env .box{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);padding:24px;box-shadow:var(--shadow-sm)}
+  .env h3{margin-bottom:16px;display:flex;gap:9px;align-items:center;font-weight:700}
+  .env ul{list-style:none}
+  .env li{padding:9px 0;border-bottom:1px dashed var(--line-soft);color:var(--muted)}
+  .env li b{color:var(--text)}
+  .env li:last-child{border:none}
+
+  /* weather */
+  .wx{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}
+  .wx .d{background:linear-gradient(160deg,#d3eefb,#eef8fc);border:1px solid #cfe7f3;
+    border-radius:var(--rad);padding:26px 22px;text-align:center;box-shadow:var(--shadow-sm);
+    transition:transform .25s,box-shadow .25s}
+  .wx .d:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+  .wx .d .ic{font-size:2.6rem}
+  .wx .d .dt{font-weight:800;margin:8px 0}
+  .wx .d .ph{color:var(--muted);font-size:.85rem;margin:8px 0 14px}
+
+  /* gallery */
+  .gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .gal .ph{aspect-ratio:1;border-radius:18px;border:2px dashed var(--line);display:grid;place-items:center;
+    color:var(--muted);font-size:1.9rem;background:linear-gradient(160deg,#fff,#fff7ec);transition:.25s}
+  .gal .ph:hover{border-color:var(--green);color:var(--green);transform:scale(1.04)}
+
+  /* voting */
+  .votes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+  .vote{background:linear-gradient(160deg,#fff4dd,#ffe6b8);border:1px solid #f0d49a;border-radius:var(--rad);padding:24px;
+    box-shadow:var(--shadow-sm);transition:transform .25s,box-shadow .25s}
+  .vote:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+  .vote h3{display:flex;gap:8px;align-items:center;margin-bottom:8px;font-weight:700}
+  .vote p{color:#9a7c4a;font-size:.92rem;margin-bottom:18px}
+  .btn{display:inline-block;text-decoration:none;background:linear-gradient(135deg,#ffb43e,var(--amber-d));color:#fff;font-weight:800;
+    padding:12px 20px;border-radius:14px;transition:.2s;cursor:pointer;border:none;font-size:.92rem;
+    box-shadow:0 8px 18px rgba(221,122,20,.3)}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(221,122,20,.4);filter:brightness(1.05)}
+
+  /* buttons row */
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:26px;position:relative;z-index:3}
+  .btn.ghost{background:rgba(255,255,255,.7);color:var(--text);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+  .btn.ghost:hover{background:#fff;box-shadow:var(--shadow-sm)}
+
+  footer{text-align:center;padding:60px 20px;color:var(--muted);font-size:.88rem;
+    background:linear-gradient(180deg,transparent,rgba(63,174,102,.06));border-top:1px solid var(--line)}
+  .note{background:linear-gradient(120deg,#fff6e6,#fff0d4);border:1px solid #f3dcae;border-left:4px solid var(--amber);
+    padding:14px 18px;border-radius:14px;color:#8a6f4a;font-size:.9rem;margin-top:20px;box-shadow:var(--shadow-sm)}
+  .note b{color:var(--text)}
+  .reveal{opacity:0;transform:translateY(30px);transition:.7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="brand"><span class="dot"></span> M7d · Wambach '26</div>
+  <button class="menu-btn" onclick="document.getElementById('nl').classList.toggle('open')">☰</button>
+  <div class="navlinks" id="nl">
+    <a href="#start">Start</a>
+    <a href="#essen">Essen</a>
+    <a href="#dienstplan">Dienstplan</a>
+    <a href="#einkauf">Einkauf</a>
+    <a href="#kosten">Kosten</a>
+    <a href="#aktivitaeten">Aktivitäten</a>
+    <a href="#packliste">Packliste</a>
+    <a href="#teilnehmer">Wer & Zimmer</a>
+    <a href="#umgebung">Umgebung</a>
+    <a href="#wetter">Wetter</a>
+    <a href="#abstimmung">Abstimmung</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="start">
+  <div class="sun"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="hero-inner">
+    <div class="kicker">Tage der Orientierung</div>
+    <h1>Juhuu, die <span class="hl">M7d</span> geht auf&nbsp;Klassenfahrt!</h1>
+    <p class="where">Landjugendhaus <b>Wambach</b> · Taufkirchen · 24.–26. Juni 2026</p>
+
+    <div class="countdown" id="countdown">
+      <div class="cd-box"><div class="num" id="d">–</div><div class="lab">Tage</div></div>
+      <div class="cd-box"><div class="num" id="h">–</div><div class="lab">Stunden</div></div>
+      <div class="cd-box"><div class="num" id="m">–</div><div class="lab">Minuten</div></div>
+      <div class="cd-box"><div class="num" id="s">–</div><div class="lab">Sekunden</div></div>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn" href="#aktivitaeten">Ideen entdecken</a>
+      <a class="btn ghost" href="#abstimmung">Mitbestimmen</a>
+    </div>
+  </div>
+  <div class="ridge">
+    <svg viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+      <!-- ferne Hügel -->
+      <path fill="#c4e6bd" d="M0,210 C300,150 600,180 900,150 C1140,128 1320,168 1440,155 L1440,300 L0,300 Z"/>
+      <!-- naher Hügel -->
+      <path fill="#a3d899" d="M0,250 C260,205 520,235 820,218 C1080,203 1300,235 1440,222 L1440,300 L0,300 Z"/>
+      <!-- ökologischer Teich -->
+      <ellipse cx="262" cy="246" rx="135" ry="19" fill="#9bd9ef"/>
+      <ellipse cx="262" cy="243" rx="118" ry="13" fill="#c6eef9"/>
+      <!-- Bäume links -->
+      <g fill="#2f8f57">
+        <g transform="translate(430,236)"><rect x="-4" y="-2" width="8" height="22" fill="#7a5230"/><polygon points="0,-44 -20,2 20,2"/><polygon points="0,-28 -16,10 16,10"/></g>
+        <g transform="translate(486,240)"><rect x="-3" y="-2" width="6" height="16" fill="#7a5230"/><polygon points="0,-34 -15,2 15,2"/></g>
+      </g>
+      <!-- Landjugendhaus -->
+      <g transform="translate(545,238)">
+        <rect x="0" y="-56" width="118" height="56" fill="#fbf3e3"/>
+        <polygon points="-12,-56 130,-56 59,-98" fill="#b9542c"/>
+        <rect x="18" y="-40" width="22" height="22" fill="#7fc7e6"/>
+        <rect x="78" y="-40" width="22" height="22" fill="#7fc7e6"/>
+        <rect x="48" y="-30" width="24" height="30" fill="#7a5230"/>
+      </g>
+      <!-- Kirche nebenan -->
+      <g transform="translate(702,238)">
+        <rect x="0" y="-62" width="62" height="62" fill="#fff7ec"/>
+        <polygon points="-8,-62 70,-62 31,-90" fill="#9a4a27"/>
+        <rect x="68" y="-116" width="32" height="116" fill="#fffaf2"/>
+        <polygon points="64,-116 104,-116 84,-154" fill="#9a4a27"/>
+        <rect x="81" y="-168" width="6" height="15" fill="#caa24a"/>
+        <rect x="76" y="-164" width="16" height="5" fill="#caa24a"/>
+        <rect x="78" y="-94" width="12" height="20" fill="#7fc7e6"/>
+      </g>
+      <!-- Bäume rechts -->
+      <g fill="#2f8f57">
+        <g transform="translate(890,224)"><rect x="-4" y="-2" width="8" height="22" fill="#7a5230"/><polygon points="0,-48 -22,2 22,2"/><polygon points="0,-30 -17,10 17,10"/></g>
+        <g transform="translate(968,230)"><rect x="-3" y="-2" width="6" height="16" fill="#7a5230"/><polygon points="0,-34 -15,2 15,2"/></g>
+        <g transform="translate(1070,226)"><rect x="-4" y="-2" width="8" height="20" fill="#7a5230"/><polygon points="0,-44 -20,2 20,2"/><polygon points="0,-28 -16,10 16,10"/></g>
+      </g>
+      <!-- Wiese vorne -->
+      <path fill="#fdf8ef" d="M0,264 C240,236 360,282 600,262 C840,244 960,284 1200,262 C1320,250 1380,268 1440,262 L1440,300 L0,300 Z"/>
+    </svg>
+  </div>
+  <div class="scroll-hint">↓ SCROLL</div>
+</header>
+
+<!-- FACTS -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="facts reveal">
+      <div class="fact"><div class="ic">🚌</div><div class="v">09:15 Uhr</div><div class="l">Treffpunkt 24.06. an der Schule</div></div>
+      <div class="fact"><div class="ic">🏡</div><div class="v">Wambach 6</div><div class="l">Landjugendhaus, 84416 Taufkirchen</div></div>
+      <div class="fact"><div class="ic">🌙</div><div class="v">2 Nächte</div><div class="l">24.–26. Juni 2026</div></div>
+      <div class="fact"><div class="ic">🏠</div><div class="v">~14:00 Uhr</div><div class="l">Rückkehr 26.06.</div></div>
+      <div class="fact"><div class="ic">💶</div><div class="v">ca. 140 €</div><div class="l">Bus, Unterkunft, Essen</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- AKTIVITÄTEN -->
+<section id="aktivitaeten">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="tag-line">Ideen-Pinnwand</div>
+      <h2 class="sect"><span class="ic">🎒</span> Was wollen wir machen?</h2>
+      <p class="sub">Eine Sammlung an Ideen – noch nichts ist fix! Sie sind nach Kategorie sortiert; mit den Chips oben könnt ihr filtern. Tippt auf das 🤍 – die Herzen <b>aller Handys werden live zusammengezählt</b>. Jede:r kann von seinem eigenen Gerät abstimmen, die beliebtesten Ideen bekommen das 🔥-Abzeichen. Jede Idee zeigt Aufwand, Kosten, Gruppengröße und einen Coolness-Faktor 🔥 (1–10).</p>
+    </div>
+    <div class="chips reveal" id="chips"></div>
+    <div class="grid g3" id="actGrid"></div>
+  </div>
+</section>
+
+<!-- ESSEN -->
+<section id="essen" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="tag-line">Selbstverpflegung · gemeinsam kochen</div>
+      <h2 class="sect"><span class="ic">🍽️</span> Was wollen wir essen?</h2>
+      <p class="sub">Unser <b>fester Speiseplan</b> für die drei Tage – diesmal essen alle das Gleiche, keine Auswahl mehr. Am <b>Mittwoch</b> haben wir vorher zuhause gefrühstückt und mittags gegessen, deshalb gibt es erst <b>abends warm</b>. Wer <b>kein Schweinefleisch</b> isst: bei der Pizza gibt es Geflügelsalami & vegetarisch, die Wiener sind aus Geflügel. Bitte Allergien & Unverträglichkeiten rechtzeitig melden!</p>
+    </div>
+    <div class="days reveal" id="days"></div>
+
+    <div class="note reveal">⚽ <b>Programm-Highlight:</b> Am <b>Donnerstag, 25.06. ab 19 Uhr</b> sind wir bei der <b>KLJB Wambach</b> beim <b>Fußball-Public-Viewing im Pfarrgarten</b>. Es gibt Essen & Getränke vor Ort (Pita/'Peterbrote') – das <b>Abendessen am Donnerstag ist damit abgedeckt</b> (kleiner Kostenbeitrag bar mitnehmen).</div>
+  </div>
+</section>
+
+<!-- DIENSTPLAN -->
+<section id="dienstplan">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="tag-line">Das Herzstück · wer macht was, wann</div>
+      <h2 class="sect"><span class="ic">👨‍🍳</span> Koch- & Dienstplan</h2>
+      <p class="sub">Wir versorgen uns selbst – pro Mahlzeit ist <b>eine Gruppe</b> komplett zuständig (Kochen, Spülen & Aufräumen/Tisch). So ist jede Gruppe <b>genau 2×</b> dran und die Arbeit fair verteilt.</p>
+    </div>
+    <div class="shop-block reveal" open style="margin-top:10px">
+      <table>
+        <thead><tr><th>Wann</th><th>🍽️ Mahlzeit</th><th>👨‍🍳 Zuständige Gruppe</th></tr></thead>
+        <tbody id="dutyBody"></tbody>
+      </table>
+    </div>
+    <h3 style="margin:26px 0 14px;color:var(--green-d)">👥 Wer ist in welcher Gruppe?</h3>
+    <div class="rooms reveal" id="dutyTeams"></div>
+    <div class="note reveal">📌 So ist <b>jede Gruppe genau 2×</b> dran: G1 = Brotzeit + Do-Mittag · G2 = Pizza + Fr-Frühstück · G3 = Lagerfeuer + Do-Frühstück. Donnerstagabend ist <b>WM Public Viewing</b> – kein Kochdienst. Am Freitag macht <b>die ganze Klasse gemeinsam</b> die Endreinigung (besenrein!).</div>
+  </div>
+</section>
+
+<!-- EINKAUF -->
+<section id="einkauf">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="tag-line">Realistische Mengen · vorwiegend Lidl</div>
+      <h2 class="sect"><span class="ic">🛒</span> Einkaufsliste & Mengen</h2>
+      <p class="sub">Geplant für <b>17 Personen</b> (15 Schüler:innen + 2 Lehrkräfte), Budget ca. <b>280 €</b>. Mengen so kalkuliert, dass alle satt werden – ohne unnötigen Überschuss. Kategorie antippen zum Aufklappen, Artikel beim Einkaufen direkt abhaken (Häkchen bleiben auf deinem Handy gespeichert).</p>
+      <div class="note">💡 <b>Lidl-Tipp:</b> Tiefkühl (Nuggets, Fischstäbchen, Rahmspinat) und Getränke zuerst, Brot/Obst/frischen Teig erst kurz vor Abreise. Instant-Püree statt frische Kartoffeln spart Zeit und Geld. Leitungswasser im Haus nutzen – weniger Kästen schleppen! Do-Abend essen wir beim Public Viewing (Bargeld mitnehmen).</div>
+    </div>
+    <div id="shop" style="margin-top:26px"></div>
+  </div>
+</section>
+
+<!-- KOSTEN -->
+<section id="kosten" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="tag-line">Kostenplanung · ohne Gewähr</div>
+      <h2 class="sect"><span class="ic">💶</span> Was kostet die Fahrt?</h2>
+      <p class="sub">Angepasst an unsere Klasse <b>M7d</b> auf Basis der TDO-Beispielrechnung. Ändere die Schülerzahl – die geteilten Kosten (Bus, Pauschale, Verpflegung) rechnen sich automatisch neu.</p>
+    </div>
+    <div class="card reveal" style="max-width:560px">
+      <label style="display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span>👧🧑 Schülerzahl</span>
+        <input id="nStud" type="number" value="15" min="1" style="width:84px;padding:8px;border-radius:10px;border:1px solid var(--line);font-size:1rem;text-align:center;background:#fff;color:var(--text)">
+      </label>
+      <label style="display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <span>🧑‍🏫 Begleitpersonen</span>
+        <input id="nAdult" type="number" value="2" min="0" style="width:84px;padding:8px;border-radius:10px;border:1px solid var(--line);font-size:1rem;text-align:center;background:#fff;color:var(--text)">
+      </label>
+      <table><tbody id="costBody"></tbody></table>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding:14px 20px 0;border-top:2px solid var(--line)">
+        <b style="font-size:1.1rem">Pro Schüler ca.</b>
+        <b id="costTotal" style="font-size:1.5rem;color:var(--green-d)">–</b>
+      </div>
+    </div>
+    <div class="note reveal">ℹ️ TDO-Werte: Referenten 26 €/Person · Übernachtung 19 €/Person·Nacht + 100 € Pauschale · Bus 935 € · Verpflegung ~280 €. <b>Wambach-Tarife</b>: KLJB 14 € · kirchliche Gruppen 17 € · sonst 19 € pro Nacht/Person (+ 100 € Pauschale, Bettwäsche-Leihe 5 €). Das Abendessen am Do (Public Viewing) wird separat bar bezahlt. Bei weniger Schülern steigt der Bus-Anteil pro Kopf – <b>ohne Gewähr!</b></div>
+  </div>
+</section>
+
+<!-- PACKLISTE -->
+<section id="packliste" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="tag-line">Einzelarbeit · zum Abhaken</div>
+      <h2 class="sect"><span class="ic">🧳</span> Packliste</h2>
+      <p class="sub">Hak ab, was schon im Koffer ist. <b>Hausschuhe sind Pflicht!</b> Kein Alkohol/Zigaretten, Handys werden nachts eingesammelt.</p>
+    </div>
+    <div class="pack reveal" id="pack"></div>
+  </div>
+</section>
+
+<!-- TEILNEHMER -->
+<section id="teilnehmer">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="tag-line">Unsere Klasse</div>
+      <h2 class="sect"><span class="ic">🛏️</span> Wer fährt mit – Zimmer & Teams</h2>
+      <p class="sub">Begleitet werden wir von externen Referent:innen sowie:</p>
+      <div class="staff">
+        <div class="person"><span class="av">FH</span> Herr Hermann · Klassenleitung</div>
+        <div class="person"><span class="av">BU</span> Frau Buchner · Förderlehrerin</div>
+      </div>
+    </div>
+    <h3 style="margin:10px 0 16px;color:var(--green)">🛏️ Zimmereinteilung</h3>
+    <div class="rooms reveal" id="rooms"></div>
+    <h3 style="margin:36px 0 16px;color:var(--green)">🤝 Dienst-Teams (Kochen · Spülen · Aufräumen)</h3>
+    <div class="rooms reveal" id="teams"></div>
+  </div>
+</section>
+
+<!-- UMGEBUNG -->
+<section id="umgebung" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="tag-line">Rund um das Haus</div>
+      <h2 class="sect"><span class="ic">🗺️</span> Umgebung & Ausstattung</h2>
+    </div>
+    <div class="env reveal">
+      <div class="box">
+        <h3>🏡 Das Haus (Landjugendhaus der KLJB)</h3>
+        <ul>
+          <li><b>29 Betten in 6 Schlafräumen</b> (4- bis 8-Bett) – wir haben das ganze Haus für uns</li>
+          <li><b>2 Gruppenräume</b> (für ca. 15 und ca. 35 Personen) & Speiseraum</li>
+          <li><b>Große Selbstversorger-Küche</b>: Herd, Backofen, Spülmaschine, 2 Kühlschränke, Grill</li>
+          <li><b>Beamer vorhanden</b> – top für Quiz, Filmabend & die Abstimmung</li>
+          <li>Überdachter Freisitz/Terrasse · Erdgeschoss rollstuhlgerecht</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>🌳 Garten & Umgebung</h3>
+        <ul>
+          <li><b>Spielwiese</b> mit Fußballtoren & Volleyballnetz</li>
+          <li><b>Tischtennisplatte</b> & Tischkicker draußen</li>
+          <li><b>Lagerfeuerplatz</b> & separater Grillplatz</li>
+          <li>Ökologischer <b>Teich/Biotop</b> mit Holzsteg – <b>Schwimmen verboten!</b></li>
+          <li><b>Kirche direkt nebenan</b> (Pfarrgarten: Public Viewing am Do)</li>
+          <li>Geocache-Pfad, Wander- & Radwege · <i>ruhige Lage, keine Bus-Ausflüge</i></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WETTER -->
+<section id="wetter">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="tag-line">Damit wir richtig packen</div>
+      <h2 class="sect"><span class="ic">🌤️</span> Wetter in Wambach</h2>
+      <p class="sub">Kurz vor der Fahrt hier die Vorhersage checken und Kleidung anpassen.</p>
+    </div>
+    <div class="wx reveal" id="wx"></div>
+    <div style="text-align:center;margin-top:24px" class="reveal">
+      <a class="btn" target="_blank" href="https://www.wetter.com/suche/?q=Taufkirchen%20Vils">Aktuelle Vorhersage öffnen →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABSTIMMUNG -->
+<section id="abstimmung">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="tag-line">Demokratie auf der Klassenfahrt</div>
+      <h2 class="sect"><span class="ic">🗳️</span> Abstimmungen</h2>
+      <p class="sub">Hier entscheiden wir gemeinsam. Die Buttons führen zu unseren Umfragen – Herr Hermann trägt die Links ein.</p>
+      <div class="note">⚙️ Zum Eintragen: In der HTML-Datei bei den jeweiligen Buttons das <code>href="#"</code> durch euren Umfrage-Link ersetzen (z. B. ein Tool eurer Wahl).</div>
+    </div>
+    <div class="votes reveal" id="votes"></div>
+  </div>
+</section>
+
+<footer>
+  <p>Gemacht für die <b>M7d</b> · Landjugendhaus Wambach · Wambach 6, 84416 Taufkirchen · 24.–26. Juni 2026 🌲</p>
+  <p style="margin-top:8px">Diese Seite ist eine Pinnwand – noch ist nichts in Stein gemeißelt. Ideen & Abstimmungen willkommen!</p>
+</footer>
+
+<script>
+/* ---------- COUNTDOWN ---------- */
+const target = new Date("2026-06-24T09:15:00").getTime();
+function tick(){
+  const now=Date.now(), diff=target-now;
+  if(diff<=0){document.getElementById('countdown').innerHTML='<div class="cd-go">🎉 Es geht los – viel Spaß in Wambach!</div>';return;}
+  const d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),
+        m=Math.floor(diff%3600000/60000),s=Math.floor(diff%60000/1000);
+  document.getElementById('d').textContent=d;
+  document.getElementById('h').textContent=String(h).padStart(2,'0');
+  document.getElementById('m').textContent=String(m).padStart(2,'0');
+  document.getElementById('s').textContent=String(s).padStart(2,'0');
+}
+tick();setInterval(tick,1000);
+
+/* ---------- NAV scroll ---------- */
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',scrollY>40)});
+document.querySelectorAll('.navlinks a').forEach(a=>a.addEventListener('click',()=>document.getElementById('nl').classList.remove('open')));
+
+/* ---------- ACTIVITIES ---------- */
+const acts=[
+ {c:"Natur",n:"Wald- & Wiesenrunde",d:"Ruhige Runde durch Wambachs Felder und Wald direkt am Haus.",e:"gering",k:"gratis",g:"ganze Klasse",cool:6,i:"🌲"},
+ {c:"Natur",n:"Geocaching-Schatzsuche",d:"Mit Handy/GPS versteckte Caches finden.",e:"mittel",k:"gratis",g:"Kleingruppen",cool:8,i:"🧭"},
+ {c:"Natur",n:"Sonnenuntergangs-Wanderung",d:"Kurze Tour zum Aussichtspunkt mit Snacks.",e:"gering",k:"gratis",g:"ganze Klasse",cool:7,i:"🌅"},
+ {c:"Gruppenspiele",n:"Werwölfe von Düsterwald",d:"Spannendes Rollenspiel im Sitzkreis.",e:"gering",k:"günstig",g:"große Gruppe",cool:9,i:"🐺"},
+ {c:"Gruppenspiele",n:"Capture the Flag",d:"Zwei Teams, zwei Flaggen, ganz viel Action.",e:"mittel",k:"gratis",g:"große Gruppe",cool:9,i:"🚩"},
+ {c:"Gruppenspiele",n:"Schnitzeljagd übers Gelände",d:"Rätsel & Aufgaben rund ums Haus.",e:"mittel",k:"gratis",g:"Teams",cool:8,i:"🗺️"},
+ {c:"Gruppenspiele",n:"Activity / Tabu",d:"Erklären, zeichnen, pantomimen – Klassiker.",e:"gering",k:"günstig",g:"ganze Klasse",cool:7,i:"🎭"},
+ {c:"Sport",n:"Fußball- & Volleyball-Turnier",d:"Team gegen Team auf dem Sportplatz.",e:"mittel",k:"gratis",g:"Teams",cool:8,i:"⚽"},
+ {c:"Sport",n:"Tischtennis-Rundlauf",d:"Alle laufen um die Platte – wer bleibt übrig?",e:"gering",k:"gratis",g:"große Gruppe",cool:7,i:"🏓"},
+ {c:"Sport",n:"Team-Olympiade",d:"Eierlauf, Sackhüpfen, Staffeln – Punkte sammeln.",e:"mittel",k:"günstig",g:"Teams",cool:8,i:"🥇"},
+ {c:"Sport",n:"Völkerball-Marathon",d:"Schnelles, lautes, lustiges Aufwärmspiel.",e:"gering",k:"gratis",g:"große Gruppe",cool:7,i:"🤾"},
+ {c:"Lagerfeuer & Abend",n:"Stockbrot am Lagerfeuer",d:"Teig auf Stock, am Feuer backen – mit Würstchen.",e:"gering",k:"günstig",g:"ganze Klasse",cool:9,i:"🔥"},
+ {c:"Lagerfeuer & Abend",n:"Lagerfeuer-Lieder",d:"Liederbücher sind da – wer spielt Gitarre?",e:"gering",k:"gratis",g:"ganze Klasse",cool:7,i:"🎸"},
+ {c:"Lagerfeuer & Abend",n:"Bunter Abend / Talentshow",d:"Sketche, Tänze, Playback – Teams treten auf.",e:"mittel",k:"gratis",g:"ganze Klasse",cool:9,i:"🌟"},
+ {c:"Lagerfeuer & Abend",n:"Gruselgeschichten",d:"Taschenlampe an, Geschichten im Dunkeln.",e:"gering",k:"gratis",g:"ganze Klasse",cool:7,i:"👻"},
+ {c:"Lagerfeuer & Abend",n:"Sterne gucken",d:"Decken raus, Sternbilder suchen.",e:"gering",k:"gratis",g:"ganze Klasse",cool:6,i:"✨"},
+ {c:"Schlechtwetter",n:"Spieleabend",d:"Gesellschaftsspiele-Turnier im Aufenthaltsraum.",e:"gering",k:"gratis",g:"ganze Klasse",cool:6,i:"🎲"},
+ {c:"Schlechtwetter",n:"Marshmallow-Turm-Bauen",d:"Höchster Turm aus Spaghetti & Marshmallows.",e:"mittel",k:"günstig",g:"Teams",cool:8,i:"🏗️"},
+ {c:"Schlechtwetter",n:"Koch-Battle",d:"Welches Team zaubert das beste Gericht?",e:"mittel",k:"günstig",g:"Teams",cool:8,i:"👨‍🍳"},
+ {c:"Foto-Challenge",n:"Foto-Bingo",d:"Bingo-Karte voller Motive zum Knipsen.",e:"gering",k:"gratis",g:"Kleingruppen",cool:8,i:"📷"},
+ {c:"Foto-Challenge",n:"Lustigstes Gruppenfoto",d:"Jedes Team inszeniert ein verrücktes Bild.",e:"gering",k:"gratis",g:"Teams",cool:7,i:"🤳"},
+ {c:"Quiz & Escape",n:"Klassen-Quiz: Wer weiß was?",d:"Lustige Fragen über uns & die Lehrer.",e:"gering",k:"gratis",g:"Teams",cool:8,i:"❓"},
+ {c:"Quiz & Escape",n:"Escape-Game 'Der Hausschlüssel'",d:"Rätselkette quer durchs Haus lösen.",e:"hoch",k:"günstig",g:"Teams",cool:9,i:"🗝️"}
+];
+const cats=["Alle",...[...new Set(acts.map(a=>a.c))]];
+const chipsEl=document.getElementById('chips');
+cats.forEach((c,idx)=>{const b=document.createElement('div');b.className='chip'+(idx===0?' active':'');b.textContent=c;b.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');render(c);};chipsEl.appendChild(b);});
+function slug(s){return s.toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');}
+/* Herzen werden über Firebase geräteübergreifend zusammengezählt.
+   Solange Firebase nicht eingerichtet ist, speichert die Seite lokal pro Gerät (Fallback). */
+const counts=JSON.parse(localStorage.getItem("m7d_counts")||"{}");
+let liked=new Set(JSON.parse(localStorage.getItem("m7d_liked")||"[]"));
+function saveLiked(){localStorage.setItem("m7d_liked",JSON.stringify([...liked]));}
+function saveCounts(){localStorage.setItem("m7d_counts",JSON.stringify(counts));}
+/* Wird vom Firebase-Modul (unten) aufgerufen, sobald Live-Stimmen ankommen */
+window.applyRemoteCounts=function(data){
+  for(const k in counts)delete counts[k];
+  Object.assign(counts,data||{});
+  applyCounts();
+};
+function flames(n){const f=Math.round(n/2);return '🔥'.repeat(f)+'<span style="opacity:.25">'+'🔥'.repeat(5-f)+'</span>';}
+function makeCard(a){
+  const el=document.createElement('div');el.className='card';el.dataset.id=slug(a.n);
+  el.innerHTML=`<h3>${a.i} ${a.n}<span class="pop-badge">🔥 beliebt</span></h3><p class="desc">${a.d}</p>
+    <div class="meta"><span class="pill eff">Aufwand: ${a.e}</span><span class="pill cost">${a.k}</span><span class="pill grp">${a.g}</span></div>
+    <div class="cool">Coolness <span class="flames">${flames(a.cool)}</span> <b style="color:var(--amber)">${a.cool}/10</b></div>
+    <button class="like" data-id="${slug(a.n)}">🤍 <span class="lc">–</span></button>`;
+  return el;
+}
+function render(cat){
+  const grid=document.getElementById('actGrid');grid.innerHTML='';
+  const catList=[...new Set(acts.map(a=>a.c))];
+  if(cat==="Alle"){
+    catList.forEach(c=>{
+      const group=acts.filter(a=>a.c===c);
+      const head=document.createElement('div');head.className='actcat';
+      head.innerHTML=`<span>${c}</span><span class="ln"></span><span class="cnt">${group.length} Ideen</span>`;
+      grid.appendChild(head);
+      group.forEach(a=>grid.appendChild(makeCard(a)));
+    });
+  }else{
+    acts.filter(a=>a.c===cat).forEach(a=>grid.appendChild(makeCard(a)));
+  }
+  applyCounts();
+}
+render("Alle");
+
+/* ---------- HERZ-ABSTIMMUNG (lokal gespeichert) ---------- */
+function applyCounts(){
+  document.querySelectorAll("#actGrid .like").forEach(b=>{
+    const id=b.dataset.id;
+    b.querySelector(".lc").textContent=counts[id]!=null?counts[id]:"–";
+    const on=liked.has(id);
+    b.classList.toggle("liked",on);
+    b.firstChild.textContent=on?"❤️ ":"🤍 ";
+  });
+  const max=Math.max(0,...acts.map(a=>counts[slug(a.n)]||0));
+  document.querySelectorAll("#actGrid .card").forEach(c=>{
+    const n=counts[c.dataset.id]||0;
+    c.classList.toggle("pop",max>=3&&n>=max);
+  });
+}
+function burst(x,y){for(let i=0;i<6;i++){const s=document.createElement("span");s.className="heart-burst";s.textContent="❤️";s.style.left=(x-10+(Math.random()*40-20))+"px";s.style.top=(y-10)+"px";s.style.animationDelay=(i*0.05)+"s";document.body.appendChild(s);setTimeout(()=>s.remove(),1100);}}
+document.getElementById("actGrid").addEventListener("click",e=>{
+  const b=e.target.closest(".like");if(!b)return;
+  const id=b.dataset.id, up=!liked.has(id);
+  if(up)liked.add(id);else liked.delete(id);
+  saveLiked();
+  counts[id]=Math.max(0,(counts[id]||0)+(up?1:-1));   // optimistische Anzeige
+  if(up)burst(e.clientX,e.clientY);
+  if(window.heartVote){window.heartVote(id,up);}        // geräteübergreifend zählen (Firebase)
+  else{saveCounts();}                                   // Fallback: nur lokal speichern
+  applyCounts();
+});
+
+/* ---------- MEAL PLAN ---------- */
+const days=[
+ {dt:"Mittwoch",sub:"24.06.2026 · Anreise",meals:[
+   {h:"Ankunft",items:[["Zuhause gefrühstückt – Ankunft am Nachmittag",0]]},
+   {h:"Brotzeit · Selbstbedienung",items:[["🥖 Brot, Aufschnitt, Käse & Gemüse stehen bereit",1],["Jede:r macht sich was, wann er mag · dazu Ramen & Snacks von zuhause",0]]},
+   {h:"Abendessen",items:[["🍕 Pizza zum Selbstbelegen (Margherita, Salami, Champignons, Mais, Käse)",1]]},
+   {h:"Lagerfeuer",items:[["🔥 Stockbrot aus Laugen-/Brezenteig & Wiener",1],["🍢 Marshmallows am Feuer",0]]}]},
+ {dt:"Donnerstag",sub:"25.06.2026",meals:[
+   {h:"Frühstück",items:[["Großes Frühstücksbuffet: Brot, Toast, Käse, Eier, Müsli & Obst",1],["Skyr, Quark, körniger Frischkäse, Marmelade · Milch, O-Saft, Kakao",0]]},
+   {h:"Mittag",items:[["Fischstäbchen & Chicken Nuggets",1],["Kartoffelbrei & Rahmspinat",1]]},
+   {h:"Abend · ab 19 Uhr",items:[["⚽ Fußball-Public-Viewing bei der KLJB Wambach",1],["Essen & Getränke vor Ort (Pita/'Peterbrote') – Abendessen abgedeckt",0]]}]},
+ {dt:"Freitag",sub:"26.06.2026 · Abreise",meals:[
+   {h:"Frühstück",items:[["Frühstücksbuffet wie am Vortag",1]]},
+   {h:"To Go",items:[["Reste-Brotzeit für die Rückfahrt einpacken",0]]}]}
+];
+const daysEl=document.getElementById('days');
+days.forEach(d=>{
+  let html=`<div class="day"><div class="head">${d.dt}<small>${d.sub}</small></div><div class="body">`;
+  d.meals.forEach(m=>{html+=`<div class="meal"><h4>${m.h}</h4><ul>`+m.items.map(it=>`<li class="${it[1]?'main':''}">${it[0]}</li>`).join('')+`</ul></div>`;});
+  html+=`</div></div>`;daysEl.innerHTML+=html;
+});
+
+/* ---------- SHOPPING LIST (≈17 Personen) ---------- */
+const shop=[
+ {cat:"🥐 Frühstück Do + Fr (2× für 17 Personen)",items:[
+   ["Toast","3 Packungen"],
+   ["Brot (Misch-/Bauernbrot)","2 Laibe"],
+   ["Aufback-Semmeln","24 Stück"],
+   ["Butter","2 × 250 g"],
+   ["Käse in Scheiben (Gouda / Emmentaler)","1,5 kg (3 Pkg.)"],
+   ["Eier (Rührei / gekocht)","30 Stück (3 × 10)"],
+   ["Müsli","1 große Pkg."],
+   ["Cornflakes","1 Pkg."],
+   ["Frische Milch","10 L (Frühstück + Kakao + Kartoffelbrei)"],
+   ["Orangensaft","4 L"],
+   ["Kakaopulver","1 Dose"],
+   ["Marmelade","1 Glas"],
+   ["Honig","1 Glas"],
+   ["Nuss-Nougat-Creme","1 Glas"],
+   ["Quark","2 × 500 g"],
+   ["Frischkäse / Aufstrich","1 Becher"],
+   ["Obst: Äpfel & Bananen","je 2 kg"],
+   ["Obst: Weintrauben","1 kg"],
+   ["Gemüse: Gurken · Tomaten · Paprika","3 Gurken · 1 kg Tomaten · 1 kg Paprika"],
+ ]},
+ {cat:"🥖 Brotzeit Mi Mittag (Selbstbedienung)",items:[
+   ["Brot (Misch-/Bauernbrot) – zusätzlich","1 Laib"],
+   ["Aufschnitt ohne Schwein (Pute/Geflügel)","750 g"],
+   ["Käse in Scheiben – zusätzlich","500 g"],
+   ["Gurken & Tomaten (zum Belegen)","je 750 g"],
+ ]},
+ {cat:"🍕 Pizza Mi Abend: zum Selbstbelegen",items:[
+   ["Frischer Pizzateig (Kühlregal)","6 Rollen"],
+   ["Passierte Tomaten / Pizzasauce","2 L (4 Pkg.)"],
+   ["Geriebener Pizzakäse / Mozzarella","2 kg"],
+   ["Salami in Scheiben","400 g"],
+   ["Geflügel-/Putensalami (schweinefrei)","400 g"],
+   ["Champignons (Dose)","3 Dosen"],
+   ["Mais (Dose)","3 Dosen"],
+   ["Paprika","500 g"],
+   ["Zwiebeln","4 Stück"],
+   ["Oregano / Pizzagewürz","1 Streuer"],
+ ]},
+ {cat:"🔥 Lagerfeuer Mi Abend",items:[
+   ["Stockbrot-Teig: frischer Laugen-/Pizzateig","3 Rollen"],
+   ["Geflügel-Wiener – für alle","3 Pkg. (~30 Stück)"],
+   ["Marshmallows","2 Beutel"],
+   ["Senf & Ketchup","je 1"],
+ ]},
+ {cat:"🍟 Do Mittag: Fisch, Nuggets, Spinat & Kartoffelbrei",items:[
+   ["TK Fischstäbchen","4 Pkg. (à 15 = 60 Stück)"],
+   ["TK Chicken Nuggets","2 kg"],
+   ["TK Rahmspinat (Portionen/Blöcke)","3 kg"],
+   ["Kartoffelpüree (Instant spart Zeit & Geld)","4 Pkg."],
+   ["Ketchup & Mayo","je 1 Flasche"],
+   ["Remoulade (zu Fischstäbchen)","1 Glas"],
+ ]},
+ {cat:"⚽ Do Abend: Public Viewing (KLJB) – kein Einkauf",items:[
+   ["Essen & Getränke vor Ort (Pita/'Peterbrote')","von der KLJB"],
+   ["Kleiner Kostenbeitrag – bar mitnehmen","mit KLJB abrechnen"],
+ ]},
+ {cat:"🍿 Snacks (für zwischendurch)",items:[
+   ["Salzstangen / Chips","4 Pkg."],
+   ["Kekse / Waffeln","3 Pkg."],
+   ["Studentenfutter / Nüsse","2 Pkg."],
+   ["Popcorn (Mikrowelle)","2 Pkg."],
+ ]},
+ {cat:"🥤 Getränke",items:[
+   ["Mineralwasser (still & sprudel)","3 Kästen + Leitungswasser"],
+   ["Apfelsaft (für Schorle)","5 L"],
+   ["Saft / Eistee","4 L"],
+   ["Tee (Beutel)","1 Pkg."],
+ ]},
+ {cat:"🧂 Koch- & Küchen-Basics (evtl. stellt das Haus manches)",items:[
+   ["Salz & Pfeffer","je 1"],
+   ["Speiseöl (zum Braten)","1 L"],
+   ["Spülmittel & Schwämme","je 2"],
+   ["Müllbeutel (Trennung!)","2 Rollen"],
+   ["Alufolie / Frischhaltefolie","je 1"],
+   ["Küchenrolle & Servietten","3 / 2"],
+   ["Einmalhandschuhe (Küche)","1 Box"],
+ ]}
+];
+const shopEl=document.getElementById('shop');
+let shopDone=new Set(JSON.parse(localStorage.getItem("m7d_shop")||"[]"));
+shop.forEach((s,i)=>{
+  let rows=s.items.map(it=>{
+    const k=slug(s.cat+'-'+it[0]);
+    const on=shopDone.has(k);
+    return `<tr class="${on?'done':''}" data-k="${k}"><td class="chk"><input type="checkbox" ${on?'checked':''}></td><td>${it[0]}</td><td class="qty">${it[1]}</td></tr>`;
+  }).join('');
+  shopEl.innerHTML+=`<details class="shop-block" ${i<2?'open':''}><summary><span>${s.cat}</span><span class="arr">▶</span></summary>
+    <table><thead><tr><th></th><th>Artikel</th><th>Menge (≈17 Pers.)</th></tr></thead><tbody>${rows}</tbody></table></details>`;
+});
+shopEl.addEventListener('change',e=>{
+  if(e.target.type!=='checkbox')return;
+  const tr=e.target.closest('tr');const k=tr.dataset.k;
+  if(e.target.checked){shopDone.add(k);tr.classList.add('done');}else{shopDone.delete(k);tr.classList.remove('done');}
+  localStorage.setItem("m7d_shop",JSON.stringify([...shopDone]));
+});
+
+/* ---------- PACKLIST ---------- */
+const pack=[
+ ["Bettwäsche (3-teilig) oder Schlafsack + Bettlaken",true],
+ ["Hausschuhe",true],["Mückenspray",true],
+ ["Handtücher (2)",false],["Waschzeug & Hygieneartikel",false],
+ ["Wettergerechte Kleidung (warm + leicht)",false],["Regenjacke",false],
+ ["Feste Schuhe",false],["Sportkleidung",false],
+ ["Sonnencreme & Kappe",false],["Trinkflasche",false],["Schreibzeug & Block",false],
+ ["Taschenlampe",false],
+ ["ggf. Medikamente (bitte absprechen)",false],["Etwas Bargeld (Beitrag Public Viewing)",false],
+ ["Kartenspiel / kleines Spiel",false],["Kuscheltier (optional)",false],["Snack/Ramen für zwischendurch",false]
+];
+const packEl=document.getElementById('pack');
+pack.forEach((p,idx)=>{
+  packEl.innerHTML+=`<label><input type="checkbox" id="pk${idx}"><span>${p[0]}${p[1]?'<span class="must">PFLICHT</span>':''}</span></label>`;
+});
+
+/* ---------- ROOMS & TEAMS ---------- */
+const rooms=[
+ {t:"6-Bett-Zimmer",p:["Maja","Emmy","Bogi","Laura"]},
+ {t:"8-Bett-Zimmer",p:["Elijah","Noah","Nicki"]},
+ {t:"8-Bett-Zimmer",p:["Matwej","Johannes","Turhan"]},
+ {t:"4-Bett-Zimmer",p:["Atina","Fadila","Sofia","Kamila"]},
+ {t:"Schläft zuhause",p:["Ronya (tagsüber dabei)"]}
+];
+const roomsEl=document.getElementById('rooms');
+rooms.forEach(r=>{roomsEl.innerHTML+=`<div class="room"><div class="rt">🛏️ ${r.t}</div><ul>`+r.p.map(x=>`<li>${x}</li>`).join('')+`</ul></div>`;});
+const teams=[
+ {t:"Gruppe 1",p:["Emmy","Maja","Nicki","Elijah"]},
+ {t:"Gruppe 2",p:["Atina","Kamila","Fadila","Sofia","Ronya"]},
+ {t:"Gruppe 3",p:["Matwej","Laura","Turhan","Noah","Bogi","Johannes"]}
+];
+const teamsEl=document.getElementById('teams');
+teams.forEach(r=>{teamsEl.innerHTML+=`<div class="room"><div class="rt">🤝 ${r.t}</div><ul>`+r.p.map(x=>`<li>${x}</li>`).join('')+`</ul></div>`;});
+
+/* ---------- WEATHER PLACEHOLDERS ---------- */
+const wx=[["Mi 24.06","🌤️"],["Do 25.06","☀️"],["Fr 26.06","⛅"]];
+const wxEl=document.getElementById('wx');
+wx.forEach(w=>{wxEl.innerHTML+=`<div class="d"><div class="ic">${w[1]}</div><div class="dt">${w[0]}</div><div class="ph">Vorhersage folgt</div></div>`;});
+
+/* ---------- VOTES ---------- */
+const votes=[
+ {i:"🏞️",t:"Tages-Aktivität am Haus",d:"Schnitzeljagd, Sportturnier, Wald oder Geocaching – was zuerst?"},
+ {i:"🎉",t:"Abendprogramm",d:"Bunter Abend, Lagerfeuer-Lieder oder Spieleabend?"},
+ {i:"⚽",t:"Lieblings-Aktivität",d:"Welche Spiele & Challenges wollen wir unbedingt machen?"},
+ {i:"🍿",t:"Snacks & Naschereien",d:"Welche Knabbereien sollen zusätzlich mit? Essen steht, Snacks dürft ihr wählen."}
+];
+const votesEl=document.getElementById('votes');
+votes.forEach(v=>{votesEl.innerHTML+=`<div class="vote"><h3>${v.i} ${v.t}</h3><p>${v.d}</p><a class="btn" href="#">Zur Abstimmung →</a></div>`;});
+
+/* ---------- DIENSTPLAN ---------- */
+const duties=[
+ ["Mittwoch","Brotzeit (Mittag)","Gruppe 1"],
+ ["Mittwoch","Pizza-Abend","Gruppe 2"],
+ ["Mittwoch","🔥 Lagerfeuer (Stockbrot & Wiener)","Gruppe 3"],
+ ["Donnerstag","Frühstück","Gruppe 3"],
+ ["Donnerstag","Mittag (Fisch, Nuggets, Spinat, Püree)","Gruppe 1"],
+ ["Donnerstag","Abend","⚽ Public Viewing – frei für alle"],
+ ["Freitag","Frühstück","Gruppe 2"],
+ ["Freitag","Abreise","🧹 Endreinigung: alle Teams gemeinsam"]
+];
+const db=document.getElementById('dutyBody');
+duties.forEach(d=>{db.innerHTML+=`<tr><td style="font-weight:700">${d[0]}</td><td>${d[1]}</td><td style="font-weight:700;color:var(--green-d)">${d[2]}</td></tr>`;});
+const dt2=document.getElementById('dutyTeams');
+teams.forEach(r=>{dt2.innerHTML+=`<div class="room"><div class="rt">🤝 ${r.t}</div><ul>`+r.p.map(x=>`<li>${x}</li>`).join('')+`</ul></div>`;});
+
+/* ---------- KOSTENRECHNER ---------- */
+function calcCost(){
+  const st=Math.max(1,+document.getElementById('nStud').value||1);
+  const ad=Math.max(0,+document.getElementById('nAdult').value||0);
+  const pers=st+ad, nights=2;
+  const ref=26, ueber=19*nights+100/pers, bus=935/pers, verpf=280/pers;
+  const sum=ref+ueber+bus+verpf;
+  const e=n=>n.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+  const rows=[["Referenten",ref],["Übernachtung (2 Nächte + Pauschale)",ueber],["Bus (935 € ÷ "+pers+")",bus],["Verpflegung (~280 € ÷ "+pers+")",verpf]];
+  document.getElementById('costBody').innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="qty">${e(r[1])}</td></tr>`).join('');
+  document.getElementById('costTotal').textContent='≈ '+e(sum);
+}
+['nStud','nAdult'].forEach(id=>document.getElementById(id).addEventListener('input',calcCost));
+calcCost();
+
+/* ---------- REVEAL ON SCROLL ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+
+<!-- ============================================================
+     FIREBASE: Herzen aller Handys live zusammenzählen
+     ➜ Trage unten deine Firebase-Config ein (siehe Anleitung).
+     Solange die Platzhalter stehen, speichert die Seite lokal.
+     ============================================================ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+// ⬇️⬇️⬇️  HIER deine Firebase-Config einsetzen  ⬇️⬇️⬇️
+const firebaseConfig = {
+  apiKey: "AIzaSyCkmPCWuEbEtVCcmRf-ACg_Rn49ZZblifQ",
+  authDomain: "likes-a518f.firebaseapp.com",
+  databaseURL: "https://likes-a518f-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "likes-a518f",
+  storageBucket: "likes-a518f.firebasestorage.app",
+  messagingSenderId: "844844443291",
+  appId: "1:844844443291:web:c7710d92d1606665a7883e"
+};
+// ⬆️⬆️⬆️  bis hier  ⬆️⬆️⬆️
+
+if (firebaseConfig.databaseURL && !firebaseConfig.databaseURL.includes("DEIN-PROJEKT")) {
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+  // Stimme abgeben (+1 / -1), sicher gegen gleichzeitige Zugriffe:
+  window.heartVote = (id, up) => {
+    runTransaction(ref(db, "votes/" + id), v => Math.max(0, (v || 0) + (up ? 1 : -1)))
+      .then(() => console.log("✔️ Stimme gespeichert:", id))
+      .catch(e => console.error("❌ Schreiben fehlgeschlagen (Datenbank-Regeln prüfen!):", e.message || e));
+  };
+  // Live mithören: jede Änderung von irgendeinem Handy aktualisiert sofort alle:
+  onValue(ref(db, "votes"), snap => {
+    if (window.applyRemoteCounts) window.applyRemoteCounts(snap.val() || {});
+  }, e => console.error("❌ Lesen fehlgeschlagen (Datenbank-Regeln prüfen!):", e.message || e));
+  console.log("✅ Firebase verbunden – Herzen werden geräteübergreifend gezählt.");
+} else {
+  console.warn("ℹ️ Firebase noch nicht konfiguriert – Herzen werden lokal pro Gerät gespeichert. Config eintragen, um geräteübergreifend zu zählen.");
+}
+</script>
+</body>
+</html>
